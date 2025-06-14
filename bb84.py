@@ -1,32 +1,23 @@
 import numpy as np
+from qiskit import QuantumCircuit
+from typing import List
 
-def generate_alice_data(n_bits: int) -> dict:
-    """
-    Generate random bits and bases for Alice.
+def generate_alice_data(n):
+    bits = np.random.randint(2, size=n)
+    bases = np.random.choice(["Z", "X"], size=n)
+    return bits, bases
 
-    Parameters:
-        n_bits (int): Number of bits/qubits to generate.
+def create_alice_qubits(bits: List[int], bases: List[str]) -> List[QuantumCircuit]:
+    circuits = []
+    for bit, base in zip(bits, bases):
+        qc = QuantumCircuit(1, 1)
+        if bit == 1:
+            qc.x(0)
+        if base == "X":
+            qc.h(0)
         
-    Returns:
-        dict: Dictionary with Alice's bits and bases.
-    """
+        circuits.append(qc)
+    
+    return circuits
+        
 
-    bits = np.random.randint(2, size=n_bits)
-    bases = np.random.randint(2, size=n_bits)
-    return {
-        "bits": bits,
-        "bases": bases
-    }
-
-def generate_bob_bases(n_bits: int) -> np.ndarray:
-    """
-    Generate random measurement bases for Bob.
-
-    Parameters:
-        n_bits (int): Number of bits/qubits to measure.
-
-    Returns:
-        np.ndarray: Bob's random bases (0 = Z, 1 = X)
-    """
-
-    return np.random.randint(2, size=n_bits)
