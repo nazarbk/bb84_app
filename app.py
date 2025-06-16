@@ -8,6 +8,10 @@ st.title("🔐 BB84 Protocol - Be Bob!")
 st.markdown("Simulate BB84 step by step and understand quantum key distribution.")
 
 st.subheader("🧠 Step 1: Alice generates random bits and bases")
+st.info("""
+Alice wants to send a secret key. She starts by generating a random sequence of bits, and a random sequence of bases (Z or X). Each bit is encoded into a qubit according to its base. 
+""")
+
 
 # -------------------
 # Step 0: Slider - Control n 
@@ -28,9 +32,6 @@ st.session_state["n_committed"] = n
 # -------------------
 # Step 1: Alice
 # -------------------
-st.info("""
-Alice wants to send a secret key. She starts by generating a random sequence of bits, and a random sequence of bases (Z or X). Each bit is encoded into a qubit according to its base. 
-""")
 
 if st.button("Generate Alice's bits and bases"):
     bits, bases = generate_alice_data(n)
@@ -80,7 +81,7 @@ if "alice_committed" in st.session_state:
             bob_bases.append(base)
 
     # Reset next step if bases change
-    if "bob_committed" in st.session_state and st.session_state.get("bob_bases"):
+    if "bob_committed" in st.session_state and st.session_state.get("bob_bases") != bob_bases:
         for key in ["bob_committed", "eve_committed", "bob_results", "alice_qubits_eve", "eve_bases"]:
             st.session_state.pop(key, None)
     
@@ -95,7 +96,7 @@ if "alice_committed" in st.session_state:
             qubits_to_measure = st.session_state["alice_qubits"]
 
         st.session_state["bob_bases"] = bob_bases
-        st.session_state["bob_results"] =  measure_qubits(qubits_to_measure, bob_bases)
+        st.session_state["bob_results"] = measure_qubits(qubits_to_measure, bob_bases)
         st.session_state["bob_committed"] = True
         st.success("✅ Bob has measured the qubits.")
 
@@ -123,7 +124,7 @@ if "bob_committed" in st.session_state:
     comparison_table = {
         "Index": sample_indices,
         "Bit (Alice)": [st.session_state["alice_bits"][i] for i in sample_indices],
-        "Bit (Bob)": [st.session_state["bob_results"][i] for i in sample_indices]
+        "Bit (Bob)": [st.session_state["bob_results"][i] for i in sample_indices],
     }
 
     if "eve_bases" in st.session_state:
@@ -131,10 +132,11 @@ if "bob_committed" in st.session_state:
         comparison_table["Base (Eve)"] = [st.session_state["eve_bases"][i] for i in sample_indices]
         comparison_table["Bit (Eve)"] = [eve_results[i] for i in sample_indices]
 
-    st.markdown("### Public comparision of selected positions:")
+    st.markdown("### Public comparison of selected positions:")
     st.table(comparison_table)
 
     discrepancies = detect_eavesdropper(st.session_state["alice_bits"], st.session_state["bob_results"], sample_indices)
+    discrepancies = [int(i) for i in discrepancies]
     st.session_state["eve_committed"] = True
 
     st.markdown("### 🗝️ Final Shared Key")
