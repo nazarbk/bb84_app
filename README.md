@@ -50,4 +50,4 @@ This simulation is designed to help users understand the inner workings of quant
 ## 📱 Contact
 - [Nazar Blanco on LinkedIn](https://www.linkedin.com/in/nazar-blanco-kataran/)
 - Check out my other project: [Quantum Single Qubit Visualizer](https://quantum-single-qubit-visualizer.streamlit.app/)
-- Visit this project: [BB84 protocol]()
+- Visit this project: [BB84 protocol](https://bb84-protocol.streamlit.app/)
