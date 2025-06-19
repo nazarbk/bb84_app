@@ -1,0 +1,13 @@
+{
+  "name": "bb84-protocol",
+  "version": "1.0.0",
+  "description": "",
+  "type": "module",
+  "main": "complex.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
