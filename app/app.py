@@ -3,9 +3,47 @@ from bb84 import generate_alice_data, create_alice_qubits, measure_qubits, extra
 import matplotlib.pyplot as plt
 import numpy as np
 
-st.set_page_config(page_title="BB84 Interactive Simulation", layout="centered")
+st.set_page_config(
+    page_title="BB84 Interactive Simulation", 
+    page_icon="assets/favicon.png",
+    layout="centered"
+)
 st.title("🔐 BB84 Protocol - Be Bob!")
 st.markdown("Simulate BB84 step by step and understand quantum key distribution.")
+
+# --------------------------------
+# Explanation of the BB84 Protocol 
+# --------------------------------
+
+with st.expander("🔍 What is the BB84 Protocol"):
+    st.markdown("""
+    The **BB84 Protocol** is a quantum key distribution (QKD) protocol that allows two parties, Alice and Bob, to establish a secret shared key over a public channel.
+
+
+    ### How it works:
+
+    1. **Alice generates a random sequence of bits** (0s and 1s) and encodes them in quantum states using random bases (Z and X).
+    - **Z basis** (computacional basis):
+        - Bit 0 → |0⟩ 
+        - Bit 1 → |1⟩ 
+    - **X basis** (diagonal basis):
+        - Bit 0 → |+⟩
+        - Bit 1 → |-⟩
+
+    2. **Bob receives the qubits** and measures them using his own randomly chosen bases (Z or X). He doesn't know Alice's bases, so the measurement outcome might not match Alice's bit. 
+
+    3. **Alice and Bob compare their bases** (not the bits) publicly. If they used same basis, they keep the measured bit.
+    - This gives them a shared sequence of bits, which forms the secret key.
+
+    4. **Eavesdropping detection**: If someone (Eve) tries to intercept the qubits, the measurements will be altered, and discrepancies will be detected when Alice and Bob compare their bits.
+
+    This ensures that the secret key remains secure.
+
+    ### Why it is secure?
+    The security of the BB84 protocol relies on the principles of **quantum mechanics**, where measuring a quantum state alters it. Any attempt to intercept the qubits by an eavesdropper introduces detectable discrepancies.
+
+    Read more about the BB84 protocol on [Wikipedia](https://en.wikipedia.org/wiki/BB84).
+    """)
 
 st.subheader("🧠 Step 1: Alice generates random bits and bases")
 st.info("""
@@ -13,9 +51,9 @@ Alice wants to send a secret key. She starts by generating a random sequence of 
 """)
 
 
-# -------------------
+# --------------------------
 # Step 0: Slider - Control n 
-# -------------------
+# --------------------------
 
 # Let user select number of qubits
 n = st.slider("Number of qubits to simulate", min_value=4, max_value=64, value=8, step=2)
@@ -100,12 +138,12 @@ if "alice_committed" in st.session_state:
         st.session_state["bob_committed"] = True
         st.success("✅ Bob has measured the qubits.")
 
-# -------------------
+# -----------------------
 # Step 3: Detection + Key
-# -------------------
+# -----------------------
 
 if "bob_committed" in st.session_state:
-    st.header("🔐 Step 3: Shared Key Extraction & Security Check")
+    st.subheader("🔐 Step 3: Shared Key Extraction & Security Check")
     st.info("""
     Now, Alice and Bob compare the bases they used. For each qubit where they used the **same base**, they keep the measured bit. Then, they publicly compare a few of those bits to check if someone (like Eve) has tampered with the transmission.
     """)
@@ -148,3 +186,13 @@ if "bob_committed" in st.session_state:
     else:
         st.success("✅ No discrepancies found. The key is secure and can be used for encryption.")
 
+# -----------------------
+# Footer
+# -----------------------
+st.markdown("""
+---
+
+Developed by [Nazar Blanco](https://github.com/nazarbk)
+
+Check out my other project: [Quantum Single Qubit Visualizer](https://quantum-single-qubit-visualizer.streamlit.app/)
+""")
